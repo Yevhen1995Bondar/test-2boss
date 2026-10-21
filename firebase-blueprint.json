@@ -1,0 +1,191 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Registered customer profile with optional dog sizing preferences",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Firebase Auth user ID"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Customer contact email"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Customer display name"
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Avatar photo URL"
+        },
+        "dogBreed": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Breed of the customer dog"
+        },
+        "dogSize": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "Recommended dog size (S, M, L, etc.)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when profile was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when profile was last updated"
+        }
+      },
+      "required": ["id", "email", "createdAt"]
+    },
+    "Cart": {
+      "title": "Cart",
+      "description": "Persistent customer shopping cart synchronized across sessions",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth user ID of the cart owner"
+        },
+        "itemsJson": {
+          "type": "string",
+          "maxLength": 50000,
+          "description": "Serialized JSON array of cart items"
+        },
+        "itemsCount": {
+          "type": "number",
+          "description": "Total quantity of items in the cart"
+        },
+        "subtotal": {
+          "type": "number",
+          "description": "Cart subtotal amount in EUR"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last cart update"
+        }
+      },
+      "required": ["userId", "itemsJson", "updatedAt"]
+    },
+    "ProductReview": {
+      "title": "ProductReview",
+      "description": "Customer review and photo feedback for dog apparel items",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique review document identifier"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User ID of the reviewer"
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Reviewer name"
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "City of residence"
+        },
+        "dog": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Dog name, breed or weight details"
+        },
+        "productHandle": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Shopify product handle being reviewed"
+        },
+        "productTitle": {
+          "type": "string",
+          "maxLength": 150,
+          "description": "Display title of the product"
+        },
+        "sizeBought": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Size purchased"
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating score between 1 and 5 stars"
+        },
+        "comment": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Review comment text"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Submission timestamp"
+        }
+      },
+      "required": ["id", "userId", "author", "productHandle", "rating", "comment", "createdAt"]
+    },
+    "SizeAlert": {
+      "title": "SizeAlert",
+      "description": "Stock and size restock notification request by customers",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique alert ID"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Customer email to notify"
+        },
+        "productHandle": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Product handle"
+        },
+        "size": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "Requested clothing size"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Request creation timestamp"
+        }
+      },
+      "required": ["id", "email", "productHandle", "size", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document keyed by auth UID"
+    },
+    "/carts/{userId}": {
+      "schema": "Cart",
+      "description": "Shopping cart document keyed by auth UID"
+    },
+    "/reviews/{reviewId}": {
+      "schema": "ProductReview",
+      "description": "Public customer reviews with verified author tracking"
+    },
+    "/sizeAlerts/{alertId}": {
+      "schema": "SizeAlert",
+      "description": "Restock notification subscriptions"
+    }
+  }
+}

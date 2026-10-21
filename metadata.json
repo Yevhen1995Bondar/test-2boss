@@ -1,0 +1,6 @@
+{
+  "name": "Milky Boss — Premium Dog Apparel & Streetwear",
+  "description": "High-fashion dog apparel, waterproof coats, and cozy knitwear designed in Germany for comfort and style.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
