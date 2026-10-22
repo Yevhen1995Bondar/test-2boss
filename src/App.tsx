@@ -17,6 +17,7 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { QuickViewModal } from './components/QuickViewModal';
 import { SizeFinderModal } from './components/SizeFinderModal';
+import { LegalModal } from './components/LegalModal';
 import { ClientCoachingBanner } from './components/ClientCoachingBanner';
 
 export default function App() {
@@ -55,6 +56,7 @@ export default function App() {
           <CartDrawer />
           <QuickViewModal />
           <SizeFinderModal />
+          <LegalModal />
 
           {/* Floating Sales & Dev Academy Guide for the user */}
           <ClientCoachingBanner />

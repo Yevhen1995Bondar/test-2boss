@@ -31,7 +31,8 @@ export const QuickViewModal: React.FC = () => {
       },
       currentSize,
       chosenColor,
-      1
+      1,
+      matchedVariant?.id
     );
     setAdded(true);
     setTimeout(() => {

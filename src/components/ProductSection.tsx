@@ -117,7 +117,8 @@ export const ProductSection: React.FC = () => {
       },
       variant.size,
       chosenColor,
-      1
+      1,
+      matched?.id
     );
 
     setAddedIds(prev => ({ ...prev, [product.id]: true }));

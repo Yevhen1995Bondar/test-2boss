@@ -409,6 +409,36 @@ export function getShopifyDirectCheckoutUrl(variantId: number | string, quantity
   return `https://milkyboss.de/cart/${variantId}:${quantity}`;
 }
 
+export function getShopifyMultiItemCheckoutUrl(
+  items: { variantId?: number | string; quantity: number }[],
+  discountCode?: string
+): string {
+  if (!items || items.length === 0) {
+    return 'https://milkyboss.de/cart';
+  }
+  const cleanItems = items
+    .filter(i => Boolean(i.variantId) && i.quantity > 0)
+    .map(i => `${i.variantId}:${i.quantity}`)
+    .join(',');
+
+  if (!cleanItems) {
+    return 'https://milkyboss.de/cart';
+  }
+
+  let url = `https://milkyboss.de/cart/${cleanItems}`;
+  if (discountCode && discountCode.trim()) {
+    url += `?discount=${encodeURIComponent(discountCode.trim())}`;
+  }
+  return url;
+}
+
+export function resolveShopifyVariantId(productId: string, size: string, colorName?: string): number | undefined {
+  const prod = INITIAL_SHOPIFY_PRODUCTS.find(p => p.id === productId || p.handle === productId);
+  if (!prod || !prod.variants || prod.variants.length === 0) return undefined;
+  const match = findMatchingVariant(prod.variants, size, colorName);
+  return match?.id || prod.variants[0]?.id;
+}
+
 export function getShopifyProductUrl(handle: string): string {
   return `https://milkyboss.de/products/${handle}`;
 }

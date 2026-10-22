@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Check, Tag } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Check, Tag, ShieldCheck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { getShopifyMultiItemCheckoutUrl, resolveShopifyVariantId } from '../services/shopifyLive';
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -14,6 +15,8 @@ export const CartDrawer: React.FC = () => {
     freeShippingRemaining,
     appliedDiscount,
     applyPromoCode,
+    promoCode,
+    openLegalModal,
     cartCount
   } = useCart();
 
@@ -25,6 +28,16 @@ export const CartDrawer: React.FC = () => {
   const shippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 4.90;
   const finalTotal = subtotal + shippingCost;
   const progressPercent = Math.min(100, Math.round(((freeShippingThreshold - freeShippingRemaining) / freeShippingThreshold) * 100));
+
+  // Compute live multi-item Shopify Cart Permalink
+  const shopifyCheckoutUrl = useMemo(() => {
+    if (cart.length === 0) return 'https://milkyboss.de/cart';
+    const items = cart.map(item => ({
+      variantId: item.shopifyVariantId || resolveShopifyVariantId(item.product.id, item.size, item.color.name),
+      quantity: item.quantity
+    }));
+    return getShopifyMultiItemCheckoutUrl(items, promoCode);
+  }, [cart, promoCode]);
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,18 +231,55 @@ export const CartDrawer: React.FC = () => {
                 </div>
               </div>
 
-              {/* Checkout Action Button */}
-              <a
-                href="https://milkyboss.de/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 text-center"
-              >
-                <span>Zur Kasse auf MilkyBoss.de</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
+              {/* Checkout Action Button - Direct Shopify Cart Permalink */}
+              <div className="space-y-2">
+                <a
+                  href={shopifyCheckoutUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 px-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-black text-xs uppercase tracking-wider rounded-2xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 text-center active:scale-[0.98] cursor-pointer"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>Direkt zur Shopify Kasse ({cartCount} {cartCount === 1 ? 'Artikel' : 'Artikel'})</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
 
-              <div className="text-[10px] text-center text-zinc-500">
+                <div className="flex items-center justify-center gap-1.5 text-[10px] text-zinc-500">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Warenkorb wird 1:1 auf milkyboss.de übertragen</span>
+                </div>
+              </div>
+
+              {/* Legal confirmation notice with interactive modal triggers */}
+              <div className="text-[10px] text-center text-zinc-500 leading-relaxed pt-1">
+                Mit deiner Bestellung akzeptierst du unsere{' '}
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('terms')}
+                  className="font-bold text-zinc-800 underline hover:text-orange-600 cursor-pointer"
+                >
+                  AGB
+                </button>
+                , nimmst die{' '}
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('refund')}
+                  className="font-bold text-zinc-800 underline hover:text-orange-600 cursor-pointer"
+                >
+                  Widerrufsbelehrung
+                </button>{' '}
+                sowie die{' '}
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('privacy')}
+                  className="font-bold text-zinc-800 underline hover:text-orange-600 cursor-pointer"
+                >
+                  Datenschutzerklärung
+                </button>{' '}
+                zur Kenntnis.
+              </div>
+
+              <div className="text-[10px] text-center text-zinc-400">
                 Sichere SSL-Verschlüsselung · Klarna, PayPal, Apple Pay & Kreditkarte
               </div>
             </div>

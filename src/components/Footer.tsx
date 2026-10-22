@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Heart, Send, Check, ShieldCheck, Truck, RefreshCw, Mail } from 'lucide-react';
+import { Heart, Send, Check, ShieldCheck, Truck, RefreshCw, Mail, Shield, FileText } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 export const Footer: React.FC = () => {
+  const { openLegalModal } = useCart();
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSuccess, setNewsletterSuccess] = useState(false);
 
@@ -90,13 +92,64 @@ export const Footer: React.FC = () => {
 
           <div className="md:col-span-2 space-y-3">
             <div className="text-xs font-bold text-white uppercase tracking-wider">
-              Service
+              Rechtliches & Service
             </div>
             <ul className="space-y-2 text-xs text-zinc-400">
-              <li><a href="#groessen-finder" className="hover:text-white transition-colors">Passform-Beratung</a></li>
-              <li><a href="https://milkyboss.de/pages/contact" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Kontakt & WhatsApp Support</a></li>
-              <li><a href="https://milkyboss.de/policies/shipping-policy" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Versand & Rückgabe</a></li>
-              <li><a href="https://milkyboss.de/policies/terms-of-service" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">AGB & Impressum</a></li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('terms')}
+                  className="hover:text-amber-400 transition-colors cursor-pointer text-left"
+                >
+                  AGB (Geschäftsbedingungen)
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('privacy')}
+                  className="hover:text-amber-400 transition-colors cursor-pointer text-left"
+                >
+                  Datenschutzerklärung (DSGVO)
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('refund')}
+                  className="hover:text-amber-400 transition-colors cursor-pointer text-left"
+                >
+                  Widerrufsrecht & Rückgabe
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('shipping')}
+                  className="hover:text-amber-400 transition-colors cursor-pointer text-left"
+                >
+                  Versand & Zahlung
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => openLegalModal('impressum')}
+                  className="hover:text-amber-400 transition-colors cursor-pointer text-left"
+                >
+                  Impressum (§ 5 DDG)
+                </button>
+              </li>
+              <li>
+                <a
+                  href="https://milkyboss.de/pages/contact"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white transition-colors block"
+                >
+                  Kontakt & WhatsApp Support
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -122,7 +175,7 @@ export const Footer: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-xs rounded-lg transition-colors shrink-0"
+                  className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-xs rounded-lg transition-colors shrink-0 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5" />
                 </button>
@@ -139,14 +192,42 @@ export const Footer: React.FC = () => {
 
         </div>
 
-        {/* Bottom Bar: Copyright & Payment Badges */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-          <div>
-            © {new Date().getFullYear()} Milky Boss Germany. Alle Rechte vorbehalten.
+        {/* Bottom Bar: Copyright, Legal Links & Payment Badges */}
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500 border-t border-zinc-900/60 mt-8">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-center md:text-left">
+            <span>© {new Date().getFullYear()} Milky Boss Germany. Alle Rechte vorbehalten.</span>
+            <span className="hidden sm:inline">·</span>
+            <button
+              onClick={() => openLegalModal('impressum')}
+              className="hover:text-zinc-300 underline underline-offset-2 cursor-pointer"
+            >
+              Impressum
+            </button>
+            <span>·</span>
+            <button
+              onClick={() => openLegalModal('privacy')}
+              className="hover:text-zinc-300 underline underline-offset-2 cursor-pointer"
+            >
+              Datenschutz
+            </button>
+            <span>·</span>
+            <button
+              onClick={() => openLegalModal('terms')}
+              className="hover:text-zinc-300 underline underline-offset-2 cursor-pointer"
+            >
+              AGB
+            </button>
+            <span>·</span>
+            <button
+              onClick={() => openLegalModal('refund')}
+              className="hover:text-zinc-300 underline underline-offset-2 cursor-pointer"
+            >
+              Widerruf
+            </button>
           </div>
 
           {/* Payment Badges representation */}
-          <div className="flex items-center gap-2 text-[10px] font-mono font-semibold text-zinc-400">
+          <div className="flex items-center gap-2 text-[10px] font-mono font-semibold text-zinc-400 shrink-0">
             <span className="bg-zinc-900 px-2 py-1 rounded border border-zinc-800">PayPal</span>
             <span className="bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Klarna</span>
             <span className="bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Apple Pay</span>
