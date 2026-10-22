@@ -55,7 +55,7 @@ export const LookbookCommunity: React.FC = () => {
               key={idx}
               className="bg-zinc-50 border-2 border-zinc-200 hover:border-orange-500 rounded-3xl overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-zinc-200">
+              <div className="relative aspect-square overflow-hidden bg-[#FAF9F5]">
                 <img
                   src={item.url}
                   alt={item.title}

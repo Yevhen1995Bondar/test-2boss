@@ -245,13 +245,13 @@ export const ProductSection: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Scaled 4:3 photo container */}
-                <div className="relative aspect-[4/3] w-full bg-zinc-100 overflow-hidden">
+                {/* 1:1 Responsive Square Photo Container - 100% Adapted without cropping */}
+                <div className="relative aspect-square w-full bg-[#FAF9F5] overflow-hidden flex items-center justify-center">
                   <img
                     src={currentImg}
                     alt={product.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
 
                   {/* Direct link button to milkyboss.de */}
@@ -280,17 +280,17 @@ export const ProductSection: React.FC = () => {
                       <button
                         key={i}
                         onClick={() => handleSwitchPhoto(product.id, i)}
-                        className={`w-12 h-10 rounded-lg overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                        className={`w-14 h-14 aspect-square rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer bg-white ${
                           currentPhotoIdx === i
-                            ? 'border-orange-600 scale-105 shadow-xs'
-                            : 'border-transparent opacity-70 hover:opacity-100'
+                            ? 'border-orange-600 ring-2 ring-orange-500/20 scale-105 shadow-xs'
+                            : 'border-zinc-200 opacity-70 hover:opacity-100 hover:border-orange-300'
                         }`}
                         title={`Ansicht ${i + 1}`}
                       >
                         <img
                           src={imgUrl}
                           alt="Detailansicht"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-center"
                         />
                       </button>
                     ))}

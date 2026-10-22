@@ -120,7 +120,7 @@ export const ClientCoachingBanner: React.FC = () => {
                   </div>
                   <div className="p-2.5 bg-zinc-900 rounded-lg border border-zinc-800">
                     <strong className="text-white block mb-0.5">2. Прогресс-бар бесплатной доставки</strong>
-                    В корзине шкала наглядно показывает, сколько евро не хватает до бесплатной доставки (€59), что увеличивает средний чек (AOV).
+                    В корзине шкала наглядно показывает, сколько евро не хватает до бесплатной доставки (€50), что увеличивает средний чек (AOV).
                   </div>
                   <div className="p-2.5 bg-zinc-900 rounded-lg border border-zinc-800">
                     <strong className="text-white block mb-0.5">3. Социальное доказательство с привязкой</strong>

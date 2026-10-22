@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
               <Truck className="w-5 h-5" />
             </div>
             <div>
-              <strong className="block text-white text-sm">Kostenloser Versand ab 59 €</strong>
+              <strong className="block text-white text-sm">Kostenloser Versand ab 50 €</strong>
               <span className="text-zinc-400">Schnelle und klimaneutrale Lieferung via DHL GoGreen</span>
             </div>
           </div>

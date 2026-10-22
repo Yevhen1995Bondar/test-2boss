@@ -112,7 +112,7 @@ export const Hero: React.FC = () => {
                 href="#kollektion"
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 text-sm font-black text-white bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 rounded-2xl transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98]"
               >
-                <span>3 Bestseller ansehen</span>
+                <span>Alle 6 Bestseller ansehen</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
 
@@ -150,7 +150,7 @@ export const Hero: React.FC = () => {
 
           {/* Right Column: Hero Visual Anchor + 3-Product Switcher */}
           <div className="lg:col-span-6 space-y-4">
-            <div className="relative rounded-3xl overflow-hidden bg-zinc-100 border-4 border-white shadow-2xl aspect-[4/3] group">
+            <div className="relative rounded-3xl overflow-hidden bg-[#FAF9F5] border-4 border-white shadow-2xl aspect-square group">
               <img
                 src={activeItem.image}
                 alt={`${activeItem.title} im Studio-Lookbook`}
@@ -191,7 +191,7 @@ export const Hero: React.FC = () => {
                       : 'border-zinc-200 hover:border-zinc-300 opacity-75 hover:opacity-100'
                   }`}
                 >
-                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-zinc-100">
+                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-zinc-100">
                     <img
                       src={prod.image}
                       alt={prod.badge}

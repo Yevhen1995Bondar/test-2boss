@@ -41,7 +41,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [promoCode, setPromoCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
 
-  const freeShippingThreshold = 59.00;
+  const freeShippingThreshold = 50.00;
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const rawSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);

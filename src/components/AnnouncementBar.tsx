@@ -20,7 +20,7 @@ export const AnnouncementBar: React.FC = () => {
             Streetwear Drop
           </span>
           <span aria-hidden="true">·</span>
-          <span>Gratis Versand in ganz Deutschland ab 59 €</span>
+          <span>Gratis Versand in ganz Deutschland ab 50 €</span>
           <span aria-hidden="true" className="hidden md:inline">·</span>
           <span className="hidden md:inline bg-white/20 px-2 py-0.5 rounded font-mono text-yellow-200">
             Code: MILKY10 (10% Rabatt)
