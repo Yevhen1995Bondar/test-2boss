@@ -19,14 +19,16 @@ import { QuickViewModal } from './components/QuickViewModal';
 import { SizeFinderModal } from './components/SizeFinderModal';
 import { LegalModal } from './components/LegalModal';
 import { ClientCoachingBanner } from './components/ClientCoachingBanner';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <div className="min-h-screen flex flex-col bg-[#FAF9F5] text-zinc-900 selection:bg-zinc-900 selection:text-white">
-          {/* Top Slim Announcement */}
-          <AnnouncementBar />
+    <ErrorBoundary>
+      <AuthProvider>
+        <CartProvider>
+          <div className="min-h-screen flex flex-col bg-[#FAF9F5] text-zinc-900 selection:bg-zinc-900 selection:text-white">
+            {/* Top Slim Announcement */}
+            <AnnouncementBar />
 
           {/* Strict 3-zone Header */}
           <Navbar />
@@ -63,5 +65,6 @@ export default function App() {
         </div>
       </CartProvider>
     </AuthProvider>
-  );
+  </ErrorBoundary>
+);
 }

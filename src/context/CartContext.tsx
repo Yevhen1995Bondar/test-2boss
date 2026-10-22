@@ -67,19 +67,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const freeShippingThreshold = 50.00;
 
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const rawSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const rawSubtotal = cart.reduce((sum, item) => sum + (Number(item.product?.price) || 0) * (item.quantity || 1), 0);
   const subtotal = Math.max(0, rawSubtotal * (1 - appliedDiscount));
   const freeShippingRemaining = Math.max(0, freeShippingThreshold - rawSubtotal);
 
   const addToCart = (
     product: Product,
-    size: string,
-    color: { name: string; hex: string },
+    size?: string,
+    color?: { name: string; hex: string },
     quantity = 1,
     shopifyVariantId?: number
   ) => {
-    const itemKey = `${product.id}-${size}-${color.name}`;
+    if (!product) return;
+    const safeColor = color || product.colors?.[0] || { name: 'Standard', hex: '#18181B' };
+    const safeSize = size || product.sizes?.[0] || 'M';
+    const itemKey = `${product.id || 'prod'}-${safeSize}-${safeColor.name}`;
+
     setCart(prev => {
       const existing = prev.find(item => item.id === itemKey);
       if (existing) {
@@ -89,7 +93,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             : item
         );
       }
-      return [...prev, { id: itemKey, product, size, color, quantity, shopifyVariantId }];
+      return [...prev, { id: itemKey, product, size: safeSize, color: safeColor, quantity, shopifyVariantId }];
     });
     setIsCartOpen(true);
   };

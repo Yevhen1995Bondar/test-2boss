@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Ruler, Check, HelpCircle, Sparkles, Flame } from 'lucide-react';
 import { BREEDS_DATA, PRODUCTS } from '../data/products';
+import { INITIAL_SHOPIFY_PRODUCTS, findMatchingVariant } from '../services/shopifyLive';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -31,11 +32,41 @@ export const SizeCalculatorSection: React.FC = () => {
     return 'XXL';
   }, [calcMode, currentBreedData, chestInput, weightInput]);
 
-  const recommendedProduct = PRODUCTS[0]; // Hunde-Winterweste
+  const liveProduct = INITIAL_SHOPIFY_PRODUCTS[0];
+  const fallbackProduct = PRODUCTS[0];
 
   const handleQuickAdd = () => {
-    addToCart(recommendedProduct, calculatedSize, recommendedProduct.colors[0], 1);
-    setAddedItemName(recommendedProduct.name);
+    const targetSize = calculatedSize;
+    const targetColor = liveProduct?.colors?.[0] || fallbackProduct.colors[0];
+    const matched = liveProduct ? findMatchingVariant(liveProduct.variants, targetSize, targetColor.name) : undefined;
+    const currentPrice = matched?.price ? parseFloat(matched.price) : (liveProduct?.price || fallbackProduct.price);
+    const currentComparePrice = matched?.compare_at_price ? parseFloat(matched.compare_at_price) : (liveProduct?.originalPrice || fallbackProduct.originalPrice);
+
+    addToCart(
+      {
+        id: liveProduct?.id || fallbackProduct.id,
+        name: liveProduct?.title || fallbackProduct.name,
+        category: 'vests',
+        categoryLabel: 'Winter-Steppweste',
+        price: currentPrice,
+        originalPrice: currentComparePrice,
+        tag: '🔥 Nr. 1 Bestseller · Mit D-Ring Geschirr',
+        image: liveProduct?.image || fallbackProduct.image,
+        colors: liveProduct?.colors || fallbackProduct.colors,
+        sizes: liveProduct?.sizes || fallbackProduct.sizes,
+        description: liveProduct?.description || fallbackProduct.description,
+        details: liveProduct?.keyFeatures || fallbackProduct.details,
+        bestFor: 'Französische Bulldoggen, Möpse, Dackel & Chihuahuas',
+        rating: 4.9,
+        reviewsCount: 168
+      },
+      targetSize,
+      targetColor,
+      1,
+      matched?.id
+    );
+
+    setAddedItemName(liveProduct?.title || fallbackProduct.name);
 
     if (user) {
       updateDogProfile(calcMode === 'breed' ? selectedBreed : 'Eigene Maße', calculatedSize)

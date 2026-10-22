@@ -360,10 +360,11 @@ export const LegalModal: React.FC = () => {
     };
   }, [activeTab, legalModalOpen]);
 
-  const currentPolicy = STATIC_POLICIES[activeTab];
+  const currentPolicy = STATIC_POLICIES[activeTab] || STATIC_POLICIES.terms;
 
   // Search filter
   const filteredSections = useMemo(() => {
+    if (!currentPolicy?.sections) return [];
     if (!searchQuery.trim()) return currentPolicy.sections;
     const q = searchQuery.toLowerCase().trim();
     return currentPolicy.sections.filter(sec =>

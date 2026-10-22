@@ -432,10 +432,28 @@ export function getShopifyMultiItemCheckoutUrl(
   return url;
 }
 
-export function resolveShopifyVariantId(productId: string, size: string, colorName?: string): number | undefined {
-  const prod = INITIAL_SHOPIFY_PRODUCTS.find(p => p.id === productId || p.handle === productId);
+export function resolveShopifyVariantId(productId?: string, size?: string, colorName?: string): number | undefined {
+  if (!productId) return undefined;
+
+  const staticIdToHandleMap: Record<string, string> = {
+    'mb-west-01': 'wasserdichte-hunde-winterweste',
+    'mb-over-01': 'wasserdichter-winter-hundeoverall',
+    'mb-hood-01': 'fleece-hunde-hoodie-khaki',
+    'mb-over-02': 'fleece-hundeoverallcozypaws',
+    'mb-hood-02': 'dog-clothes-fleece-cloth-hooded-security-pet-sweater',
+    'mb-hood-03': 'kuscheliger-hunde-hoodie-fur-den-winter-warmer-fleece-pullover-fur-chihuahua-bulldogge-kleine-hunde'
+  };
+
+  const targetHandleOrId = staticIdToHandleMap[productId] || productId;
+  const prod = INITIAL_SHOPIFY_PRODUCTS.find(p =>
+    p.id === targetHandleOrId ||
+    p.handle === targetHandleOrId ||
+    p.id === productId ||
+    p.handle === productId
+  ) || INITIAL_SHOPIFY_PRODUCTS[0];
+
   if (!prod || !prod.variants || prod.variants.length === 0) return undefined;
-  const match = findMatchingVariant(prod.variants, size, colorName);
+  const match = findMatchingVariant(prod.variants, size || 'M', colorName);
   return match?.id || prod.variants[0]?.id;
 }
 

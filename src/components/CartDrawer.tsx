@@ -31,10 +31,10 @@ export const CartDrawer: React.FC = () => {
 
   // Compute live multi-item Shopify Cart Permalink
   const shopifyCheckoutUrl = useMemo(() => {
-    if (cart.length === 0) return 'https://milkyboss.de/cart';
+    if (!cart || cart.length === 0) return 'https://milkyboss.de/cart';
     const items = cart.map(item => ({
-      variantId: item.shopifyVariantId || resolveShopifyVariantId(item.product.id, item.size, item.color.name),
-      quantity: item.quantity
+      variantId: item.shopifyVariantId || resolveShopifyVariantId(item.product?.id, item.size, item.color?.name),
+      quantity: item.quantity || 1
     }));
     return getShopifyMultiItemCheckoutUrl(items, promoCode);
   }, [cart, promoCode]);
@@ -121,20 +121,20 @@ export const CartDrawer: React.FC = () => {
                   className="flex gap-4 p-3 bg-zinc-50/70 border border-zinc-200 rounded-xl"
                 >
                   <img
-                    src={item.product.image}
-                    alt={item.product.name}
+                    src={item.product?.image || ''}
+                    alt={item.product?.name || 'Produkt'}
                     referrerPolicy="no-referrer"
-                    className="w-20 h-20 object-cover rounded-lg shrink-0 border border-zinc-200"
+                    className="w-20 h-20 object-cover rounded-lg shrink-0 border border-zinc-200 bg-zinc-100"
                   />
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
                       <div className="flex justify-between items-start gap-2">
                         <h4 className="text-xs font-bold text-zinc-950 truncate">
-                          {item.product.name}
+                          {item.product?.name || 'Milky Boss Bestseller'}
                         </h4>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-zinc-400 hover:text-red-600 transition-colors p-0.5"
+                          className="text-zinc-400 hover:text-red-600 transition-colors p-0.5 cursor-pointer"
                           title="Artikel entfernen"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -143,7 +143,7 @@ export const CartDrawer: React.FC = () => {
                       <div className="flex items-center gap-2 text-[11px] text-zinc-500 mt-0.5">
                         <span>Größe: <strong className="text-zinc-900 font-mono">{item.size}</strong></span>
                         <span aria-hidden="true">·</span>
-                        <span>{item.color.name}</span>
+                        <span>{item.color?.name || 'Standard'}</span>
                       </div>
                     </div>
 
@@ -151,7 +151,7 @@ export const CartDrawer: React.FC = () => {
                       <div className="flex items-center border border-zinc-300 rounded-md bg-white">
                         <button
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="p-1 text-zinc-600 hover:text-zinc-950"
+                          className="p-1 text-zinc-600 hover:text-zinc-950 cursor-pointer"
                           aria-label="Menge verringern"
                         >
                           <Minus className="w-3 h-3" />
@@ -161,7 +161,7 @@ export const CartDrawer: React.FC = () => {
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="p-1 text-zinc-600 hover:text-zinc-950"
+                          className="p-1 text-zinc-600 hover:text-zinc-950 cursor-pointer"
                           aria-label="Menge erhöhen"
                         >
                           <Plus className="w-3 h-3" />
@@ -169,7 +169,7 @@ export const CartDrawer: React.FC = () => {
                       </div>
 
                       <div className="text-xs font-bold text-zinc-950 font-mono tabular-nums">
-                        {(item.product.price * item.quantity).toFixed(2)} €
+                        {((Number(item.product?.price) || 0) * (item.quantity || 1)).toFixed(2)} €
                       </div>
                     </div>
                   </div>

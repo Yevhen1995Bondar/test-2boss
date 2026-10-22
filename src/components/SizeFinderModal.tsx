@@ -1,20 +1,58 @@
 import React, { useState } from 'react';
-import { X, Ruler, Check, ArrowRight } from 'lucide-react';
+import { X, Ruler, Check, ArrowRight, ShoppingBag, Eye } from 'lucide-react';
 import { BREEDS_DATA, PRODUCTS } from '../data/products';
+import { INITIAL_SHOPIFY_PRODUCTS, findMatchingVariant } from '../services/shopifyLive';
 import { useCart } from '../context/CartContext';
 
 export const SizeFinderModal: React.FC = () => {
   const { sizeFinderOpen, setSizeFinderOpen, addToCart } = useCart();
-  const [selectedBreed, setSelectedBreed] = useState(BREEDS_DATA[0].breed);
+  const [selectedBreed, setSelectedBreed] = useState(BREEDS_DATA[0]?.breed || 'Französische Bulldogge');
 
   if (!sizeFinderOpen) return null;
 
   const currentBreed = BREEDS_DATA.find(b => b.breed === selectedBreed) || BREEDS_DATA[0];
 
   const handleSelectBreedAndAdd = () => {
-    const defaultProduct = PRODUCTS[0];
-    addToCart(defaultProduct, currentBreed.recommendedSize, defaultProduct.colors[0], 1);
+    const liveProd = INITIAL_SHOPIFY_PRODUCTS[0];
+    const fallbackProd = PRODUCTS[0];
+    const targetSize = currentBreed.recommendedSize;
+    const targetColor = liveProd?.colors?.[0] || fallbackProd.colors[0];
+    const matched = liveProd ? findMatchingVariant(liveProd.variants, targetSize, targetColor.name) : undefined;
+    const currentPrice = matched?.price ? parseFloat(matched.price) : (liveProd?.price || fallbackProd.price);
+    const currentComparePrice = matched?.compare_at_price ? parseFloat(matched.compare_at_price) : (liveProd?.originalPrice || fallbackProd.originalPrice);
+
+    addToCart(
+      {
+        id: liveProd?.id || fallbackProd.id,
+        name: liveProd?.title || fallbackProd.name,
+        category: 'vests',
+        categoryLabel: 'Winter-Steppweste',
+        price: currentPrice,
+        originalPrice: currentComparePrice,
+        tag: '🔥 Nr. 1 Bestseller · Mit D-Ring Geschirr',
+        image: liveProd?.image || fallbackProd.image,
+        colors: liveProd?.colors || fallbackProd.colors,
+        sizes: liveProd?.sizes || fallbackProd.sizes,
+        description: liveProd?.description || fallbackProd.description,
+        details: liveProd?.keyFeatures || fallbackProd.details,
+        bestFor: 'Französische Bulldoggen, Möpse, Dackel & Chihuahuas',
+        rating: 4.9,
+        reviewsCount: 168
+      },
+      targetSize,
+      targetColor,
+      1,
+      matched?.id
+    );
     setSizeFinderOpen(false);
+  };
+
+  const handleApplyAndBrowse = () => {
+    setSizeFinderOpen(false);
+    const el = document.getElementById('kollektion');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -94,17 +132,22 @@ export const SizeFinderModal: React.FC = () => {
               <div><strong>2. Rückenlänge:</strong> Messe vom Halsbandansatz bis kurz vor den Schwanzansatz.</div>
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
               <button
-                onClick={() => setSizeFinderOpen(false)}
-                className="flex-1 py-2.5 px-4 text-xs font-semibold text-zinc-700 bg-zinc-100 hover:bg-zinc-200 rounded-xl transition-colors"
+                type="button"
+                onClick={handleApplyAndBrowse}
+                className="flex-1 py-3 px-4 text-xs font-bold text-zinc-900 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                Fenster schließen
+                <Eye className="w-3.5 h-3.5 text-orange-600" />
+                <span>Kollektion in {currentBreed.recommendedSize} filtern</span>
               </button>
+
               <button
+                type="button"
                 onClick={handleSelectBreedAndAdd}
-                className="flex-1 py-2.5 px-4 text-xs font-bold text-white bg-zinc-950 hover:bg-zinc-800 rounded-xl transition-colors flex items-center justify-center gap-1.5"
+                className="flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider text-white bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:scale-98"
               >
+                <ShoppingBag className="w-3.5 h-3.5 text-white" />
                 <span>Bestseller in {currentBreed.recommendedSize} testen</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
